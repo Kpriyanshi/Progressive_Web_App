@@ -5,6 +5,19 @@ const connectDB = async () => {
         console.log("MongoDB connection established successfully");
     })
 
-    await mongoose.connect(`${process.env.MONGODB_URI}/mavericks` )
+    const mongoUri = process.env.MONGODB_URI;
+    console.log("MongoDB URI:", mongoUri ? "Found" : "NOT FOUND");
+    
+    if (!mongoUri) {
+        console.error("MONGODB_URI environment variable is not set!");
+        return;
+    }
+
+    try {
+        await mongoose.connect(mongoUri);
+    } catch (error) {
+        console.error("MongoDB connection failed:", error.message);
+        console.log("Server will continue without database connection");
+    }
 }
 export default connectDB;

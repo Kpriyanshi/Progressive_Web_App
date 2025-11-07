@@ -8,7 +8,8 @@ const currency = "INR";
 const deliveryCharge = 10;
 
 // gateway initialization
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {});
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripe = stripeSecretKey ? new Stripe(stripeSecretKey, {}) : null;
 
 // placing orders using COD method
 const placeOrder = async (req, res) => {
@@ -39,6 +40,14 @@ const placeOrder = async (req, res) => {
 // placing order using Stripe payment gateway
 const placeOrderStripe = async (req, res) => {
   try {
+    // Check if Stripe is configured
+    if (!stripe) {
+      return res.json({ 
+        success: false, 
+        message: "Stripe payment gateway is not configured. Please add STRIPE_SECRET_KEY to environment variables." 
+      });
+    }
+
     const { userId, items, amount, address } = req.body;
     console.log(req.body);
     const { origin } = req.headers;

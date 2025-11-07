@@ -6,13 +6,16 @@ import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
 import productRouter from "./routes/productRoute.js";
 import cartRouter from "./routes/cartRoute.js";
-import orderRouter from "./routes/orderRoute.js";  // ✅ FIXED - was "oderRoute"
+import orderRouter from "./routes/orderRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Connect to database and cloud storage
-connectDB();
+connectDB().catch(err => {
+  console.error("Database connection failed:", err.message);
+  console.log("Server continuing without database...");
+});
 connectCloudinary();
 
 // Middlewares
