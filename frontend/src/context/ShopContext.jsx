@@ -33,7 +33,6 @@ const ShopContextProvider = (props) => {
     typeof navigator !== "undefined" ? navigator.onLine : true
   );
   const navigate = useNavigate();
-  const cartUpdatedInitialized = useRef(false);
 
   const addToCart = async (itemId, size) => {
     if (!size) {
@@ -177,19 +176,8 @@ const ShopContextProvider = (props) => {
     }
   }, [cartItems]);
 
-  // Show a toast whenever the cart updates (skip initial load)
-  useEffect(() => {
-    if (!cartUpdatedInitialized.current) {
-      cartUpdatedInitialized.current = true;
-      return;
-    }
-    // Generic cart update toast
-    try {
-      toast.info("Cart updated");
-    } catch (err) {
-      console.log("Failed to show cart update toast:", err);
-    }
-  }, [cartItems]);
+  // Removed generic "Cart updated" notification to prevent unwanted toasts on initial load
+  // Individual actions like addToCart already show their own specific notifications
 
   // Sync function: iterate through cart and update server quantities
   const syncCartToServer = async (cart, token) => {
